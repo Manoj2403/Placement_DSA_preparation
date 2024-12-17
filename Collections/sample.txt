@@ -1,0 +1,13 @@
+Queue<Integer> pq = new PriorityQueue<>() ;
+        int[] arr = new int[]{1,25,20,10,6};
+        for(int i:arr){
+            pq.add(i);
+        }
+        new PriorityQueue<>().add(true);
+        System.out.println(pq.element());
+
+        //Iterator is mostly used by all the object element iteration in collection because it is present in Collection Interface
+        Iterator itr = pq.iterator();
+        while(itr.hasNext()){
+            System.out.println(itr.next());
+        }
