@@ -108,7 +108,7 @@ class Account {
         String name = sc.nextLine();
         System.out.print("Enter Age : ");
         int age = sc.nextInt();
-        sc.nextLine();
+        sc.nextLine(); //To read the input newline from buffer
         System.out.print("Enter Mobile No : ");
         long phoneNo = sc.nextLong();
         sc.nextLine();
