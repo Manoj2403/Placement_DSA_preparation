@@ -102,14 +102,16 @@ class Account {
     }
 
     public void addCustomer() {
+        // sc.nextLine();
         System.out.println("Enter Customer Details :");
         System.out.print("Enter Name : ");
         String name = sc.nextLine();
-        // sc.nextLine();
         System.out.print("Enter Age : ");
         int age = sc.nextInt();
+        sc.nextLine();
         System.out.print("Enter Mobile No : ");
         long phoneNo = sc.nextLong();
+        sc.nextLine();
         customer = new Customer(name, age, phoneNo);
         System.out.println(customer.getCustomerName() + " Customer Added Successfully..");
     }
@@ -166,7 +168,7 @@ class Bank {
         long accNo = sc.nextLong();
         int minBal = 0;
         while(minBal<2000){
-            System.out.println("Enter Mnimum Balance : ");
+            System.out.println("Enter Minimum Balance : ");
             minBal = sc.nextInt();
         }
         sc.nextLine();
@@ -209,7 +211,7 @@ class Bank {
     public void deposit(long accNo) {
         Account currAccount = checkAcc(accNo);
         if (currAccount != null) {
-            System.out.println("😘Welcome " + currAccount.getCustomer().getCustomerName() + "!");
+            System.out.println("Welcome " + currAccount.getCustomer().getCustomerName() + "!");
             while (true) {
                 System.out.println("Enter the Amount : (Between 2000 to 40000) ");
                 int amount = sc.nextInt();
