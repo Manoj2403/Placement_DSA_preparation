@@ -296,8 +296,6 @@ public class BankManagement {
                     System.exit(0);
                     break;
 
-                default:
-                    System.out.println("Invalid option. Please try again!");
             }
         }
     }

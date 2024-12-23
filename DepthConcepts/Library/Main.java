@@ -226,7 +226,7 @@ public class Main
 		Scanner sc = new Scanner(System.in);
 		while(true){
 		    System.out.println("--------------------------------------------------");
-		    System.out.println("Enter 1 - Add Books\nEnter 2 - Borrow Books\nEnter 3 - Return Book\nEnter 4 - Display Books\nEnter 5 - Display Borrowed Users");
+		    System.out.println("Enter 1 - Add Books\nEnter 2 - Borrow Books\nEnter 3 - Return Book\nEnter 4 - Display Books\nEnter 5 - Display Borrowed Users\nEnter Any keys(Numbers) - Exit");
 		    int option = sc.nextInt();
 		    if(option==1){
 		        libraryManagement.add();

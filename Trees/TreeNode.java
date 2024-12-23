@@ -20,6 +20,37 @@ public class TreeNode {
 
         return root;
     }
+
+
+//--------------------------------------------------------------------------------------------------------
+//                                      using while loop
+    // public void insert(int data){
+    //     if(root==null){
+    //         root = new Node(data);
+    //         return ;
+    //     }
+    //     Node temp = root;
+    //     Node parent = null;
+    //     boolean fromLeft=true;
+    //     while(temp!=null){
+    //         if(data<temp.data){
+    //             parent = temp;
+    //             temp = temp.left;
+    //             fromLeft = true;
+    //         }else{
+    //             parent = temp;
+    //             temp = temp.right;
+    //             fromLeft = false;
+    //         }
+    //     }
+    //     Node newNode = new Node(data);
+    //     if(fromLeft){
+    //         parent.left = newNode;
+    //     }
+    //     else{
+    //         parent.right = newNode;
+    //     }
+    // }
 // ------------------------------------------------------------------------------------------------
     // public void add(Node node) {
     //     root = addRec(root, node);
