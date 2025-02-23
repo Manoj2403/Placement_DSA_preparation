@@ -52,23 +52,7 @@ public class TreeNode {
     //     }
     // }
 // ------------------------------------------------------------------------------------------------
-    // public void add(Node node) {
-    //     root = addRec(root, node);
-    //     // System.out.println(root);
-    // }
 
-    // private Node addRec(Node root, Node node) {
-    //     if (root == null)
-    //         return node;
-    //     if (node.data < root.data) {
-    //         root.left = addRec(root.left, node);
-    //     } else if (node.data > root.data) {
-    //         root.right = addRec(root.right, node);
-    //     }
-
-    //     return root;
-    // }
-// ------------------------------------------------------------------------------------------------
 
     // InOrder Traversal  ------> It gives the element in Sorted Order
     public void inorder() {

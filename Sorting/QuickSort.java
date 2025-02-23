@@ -45,7 +45,7 @@ public class QuickSort{
                 left++;
                 right--;
             }
-            else if(arr[pi_idx]>arr[left])
+            else if(arr[left]<=arr[pi_idx])
                 left++;
             else 
                 right--;
