@@ -1,4 +1,3 @@
-
 // package Bank Management;
 import java.util.*;
 
@@ -53,6 +52,7 @@ class Customer {
         return "Customer [customerId=" + customerId + ", customerName=" + customerName + ", phoneNo=" + phoneNo
                 + ", age=" + age + "]";
     }
+    
 
 }
 
