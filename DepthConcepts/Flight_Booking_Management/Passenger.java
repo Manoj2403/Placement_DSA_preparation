@@ -1,4 +1,4 @@
-package Flight_Booking_Management;
+// package Flight_Booking_Management;
 
 public class Passenger {
     private static int passengerId;

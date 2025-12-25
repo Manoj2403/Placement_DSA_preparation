@@ -32,17 +32,27 @@ public class MaxPq {
         swim(n);
     }
 
+    // Max Heap property Swim Method ---------------
     private void swim(int child_idx) {
         // 1 based indexing so parent = child_idx/2
-        int parent = child_idx / 2;
-        while (child_idx > 1 && heap[parent] < heap[child_idx]) {
-            int temp = heap[parent];
-            heap[parent] = heap[child_idx];
-            heap[child_idx] = temp;
-            child_idx = parent;
-            parent = child_idx / 2;
+        int parent_idx = child_idx / 2;
+        while (child_idx > 1 && heap[parent_idx] < heap[child_idx]) {
+            swap(parent_idx, child_idx);
+            child_idx = parent_idx;
+            parent_idx = child_idx / 2;
         }
     }
+
+    // Min Heap property Swim Method -------------------
+    // private void swim(int child_idx) {
+    // int parent = child_idx / 2;
+    // while (child_idx > 1 && heap[parent] > heap[child_idx]) { // <-- flipped
+    // comparison
+    // swap(parent, child_idx);
+    // child_idx = parent;
+    // parent = child_idx / 2;
+    // }
+    // }
 
     // deletion in max Heap
     public int delMax() {
@@ -55,6 +65,18 @@ public class MaxPq {
         return max;
     }
 
+    // deletion in Min Heap(Use this when swim and sink method for Min Heap property are uncommented)
+    // public int delMin() {
+    //     if (isEmpty())
+    //         return -1;
+    //     int min = heap[1];
+    //     swap(1, n);
+    //     n--;
+    //     sink(1);
+    //     return min;
+    // }
+
+    //Max Heap Deletion Method (Removes the Maximum Property)
     private void sink(int parent_idx) {
         while (2 * parent_idx <= n) {
             int leftChild = 2 * parent_idx;
@@ -71,6 +93,28 @@ public class MaxPq {
         }
     }
 
+    //Min Heap Deletion Method (Removes the Minimum Property)
+    // private void sink(int parent_idx) {
+    //     while (2 * parent_idx <= n) {
+    //         int leftChild = 2 * parent_idx;
+    //         int rightChild = 2 * parent_idx + 1;
+    //         int smallerChild = leftChild;
+
+    //         // choose smaller child
+    //         if (rightChild <= n && heap[rightChild] < heap[leftChild]) {
+    //             smallerChild = rightChild;
+    //         }
+
+    //         // if parent is smaller than both children, stop
+    //         if (heap[parent_idx] <= heap[smallerChild]) {
+    //             break;
+    //         }
+
+    //         swap(parent_idx, smallerChild);
+    //         parent_idx = smallerChild;
+    //     }
+    // }
+
     public void print() {
         for (int i = 1; i <= n; i++) {
             System.out.print(heap[i] + " ");
@@ -84,7 +128,7 @@ public class MaxPq {
         // right child = 2*parent + 1
     }
 
-    // HeapSort
+    // HeapSort(It is only for sorting not maintaing the heap property)
     public void heapSort() {
         int originalSize = n; // Store the original size of the heap
         for (int i = 1; i <= originalSize; i++) {
@@ -122,5 +166,26 @@ public class MaxPq {
         maxHeap.heapSort();
         maxHeap.print();
         System.err.println(maxHeap.size());
+
+
+        //GFG "Min cost to cut the ropes" (Min Heap required so uncomment the swim ,sink and delMin method to get the Correct output)----------------
+        // int[] arr = { 1, 2, 3, 4, 5 };
+        // for (int val : arr) {
+        //     maxHeap.insert(val);
+        // }
+        // // maxHeap.print();
+        // // maxHeap.heapSort();
+        // maxHeap.print();
+        // int minCost = 0;
+        // while (maxHeap.size() > 1) {
+        //     int currMin = maxHeap.delMin() + maxHeap.delMin();
+        //     minCost += currMin;
+        //     maxHeap.insert(currMin);
+        //     // maxHeap.heapSort();
+        // }
+        // System.out.println("The Minimum Cost is : " + minCost);
+        //-------------------------------------------------------------------------------
+
     }
+
 }

@@ -1,0 +1,38 @@
+1.
+(cmd) javac -version
+      java -version(Both should be same)
+
+(cmd) where java
+        (It Should Prnit like below dated Aug 17th 2025)
+        C:\Program Files\Java\jdk-21\bin\java.exe
+        C:\Program Files\Java\jdk-19\bin\java.exe
+------------if it not like this ---------------
+2.    
+    ->Open System Environment Variables:
+
+    ->Press Win + R → type sysdm.cpl → Enter
+
+    ->Go to Advanced → Environment Variables
+
+    ->Under System variables → find Path → Edit
+
+    ->Remove or disable:(Following one)
+            C:\Program Files (x86)\Common Files\Oracle\Java\javapath
+            C:\Program Files\Common Files\Oracle\Java\javapath
+
+    ->Move this entry to the top:(Following one)
+            C:\Program Files\Java\jdk-21\bin
+            
+    ->(Optional) Remove jdk-19\bin if you don’t need Java 19.
+
+    ->Make sure JAVA_HOME is set to:(Following one)
+        C:\Program Files\Java\jdk-21
+
+    ->Restart IDe(Eclipse or VS code)
+
+3.
+    java -version
+    javac -version(Both should same)
+
+
+    

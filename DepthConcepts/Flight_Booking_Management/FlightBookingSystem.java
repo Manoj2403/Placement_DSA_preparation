@@ -1,4 +1,4 @@
-package Flight_Booking_Management;
+// package Flight_Booking_Management;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,11 +109,16 @@ public class FlightBookingSystem {
         return null;
     }
 
-    public LocalDateTime getParsedDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
-        LocalDateTime parsedDate = LocalDateTime.parse(date, formatter);
+    public LocalDateTime getParsedDateTime(String date,String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                
+        LocalDate parsedLocalDate = LocalDate.parse(date, formatter);
 
-        return parsedDate;
+        LocalTime parsedLocalTime = LocalTime.parse(time);
+
+        LocalDateTime combinedDateTime  = parsedLocalDate.atTime(parsedLocalTime);
+
+        return combinedDateTime;
     }
 
     public List<Flight> getAvailableFlights(String from, String to, LocalDateTime date) {

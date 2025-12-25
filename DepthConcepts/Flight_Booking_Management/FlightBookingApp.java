@@ -1,6 +1,8 @@
-package Flight_Booking_Management;
+// package Flight_Booking_Management;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +11,12 @@ import java.util.Scanner;
 public class FlightBookingApp {
     static FlightBookingSystem bookingSystem;
 
-    FlightBookingApp() {
-        bookingSystem = new FlightBookingSystem();
-    }
-
     public static void main(String[] args) {
+        bookingSystem = new FlightBookingSystem();
         Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
         while (true) {
             System.out.println("1) Add Flight\n 2) Book Flight\n 3) View Flights\n 4) Cancel Flight\n 5) Exit");
+            int choice = sc.nextInt();
             if (choice == 1) {
                 System.out.println("Choose Airplane Model for Your Flight\n");
                 System.out.println("1) Airbus A320");
@@ -38,11 +37,20 @@ public class FlightBookingApp {
                 String arrival = sc.next();
                 System.out.println("Enter Date (YYYY-MM-DD):");
                 String date = sc.next();
+                System.out.println("Enter Time (HH:MM):");
+                String time = sc.next();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
-                LocalDateTime parsedDate = LocalDateTime.parse(date, formatter);
+                // String combinedDate = date +"T"+time;
 
-                bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival, parsedDate);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                
+                LocalDate parsedLocalDate = LocalDate.parse(date, formatter);
+
+                LocalTime parsedLocalTime = LocalTime.parse(time);
+
+                LocalDateTime combinedDateTime = parsedLocalDate.atTime(parsedLocalTime);
+
+                bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival, combinedDateTime);
 
             } else if (choice == 2) {
                 System.out.println("Enter From Location : ");
@@ -94,8 +102,11 @@ public class FlightBookingApp {
                 String to = sc.nextLine();
                 System.out.println("Enter Date : (yyyy mm dd)");
                 String date = sc.nextLine();
+                System.out.println("Enter Time (HH:MM):");
+                String time = sc.next();
+                
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
-                        bookingSystem.getParsedDateTime(date));
+                        bookingSystem.getParsedDateTime(date,time));
                 System.out.println(availableFlights.size() + " Flights are available from " + from.toUpperCase()
                         + " to " + to.toUpperCase());
                 for (Flight flight : availableFlights) {
@@ -106,7 +117,7 @@ public class FlightBookingApp {
                     System.out.println("To : " + flight.getArrivalLocation());
                     System.out.println("Date : " + flight.getDate());
                     System.out.println("Available Seats : " + flight.getAvailableSeats());
-                    System.out.println("*******Kindly Note the Flight Id to Book Flight for you Journey******");
+                    System.out.println("*******Kindly Note the Flight Id to Book Flight for your Journey******");
                 }
             } else if (choice == 5) {
                 System.exit(0);
