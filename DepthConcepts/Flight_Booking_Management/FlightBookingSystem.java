@@ -22,7 +22,7 @@ public class FlightBookingSystem {
                 return;
             }
         }
-        Flight flight = new Flight(flightId, airplane, departureLocation, arrivalLocation, date, new ArrayList<>());
+        Flight flight = new Flight(flightId, airplane, departureLocation.toLowerCase(), arrivalLocation.toLowerCase(), date, new ArrayList<>());
         flights.add(flight);
         System.out.println("Flight Added Successfully....");
     }
@@ -117,15 +117,17 @@ public class FlightBookingSystem {
         LocalTime parsedLocalTime = LocalTime.parse(time);
 
         LocalDateTime combinedDateTime  = parsedLocalDate.atTime(parsedLocalTime);
-
+        
         return combinedDateTime;
     }
 
-    public List<Flight> getAvailableFlights(String from, String to, LocalDateTime date) {
+    public List<Flight> getAvailableFlights(String from, String to, LocalDateTime dateTime) {
         return flights.stream()
                 .filter(flight -> flight.getDepartureLocation().equals(from.toLowerCase())
                         && flight.getArrivalLocation().equals(to.toLowerCase()))
-                .filter(flight -> flight.getDate().isAfter(LocalDateTime.now()))
+                // .peek(flight -> System.out.println("Matching route: " + flight.getDate() + 
+                //     " isAfter? " + flight.getDate().isAfter(dateTime)))
+                .filter(flight -> !flight.getDate().isBefore(dateTime))
                 .collect(Collectors.toList());
     }
 

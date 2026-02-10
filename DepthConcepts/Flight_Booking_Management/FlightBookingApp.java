@@ -11,6 +11,17 @@ import java.util.Scanner;
 public class FlightBookingApp {
     static FlightBookingSystem bookingSystem;
 
+    public static void printFlightDetails(Flight flight) {
+        System.out.println("---------------------------");
+        System.out.println("Flight ID : " + flight.getFlightId());
+        System.out.println("Airplane Model : " + flight.getAirplane().getModelName());
+        System.out.println("From : " + flight.getDepartureLocation().toUpperCase());
+        System.out.println("To : " + flight.getArrivalLocation().toUpperCase());
+        System.out.println("Date : " + flight.getDate());
+        System.out.println("Available Seats : " + flight.getAvailableSeats());
+        System.out.println("*******Kindly Note the Flight Id to Book Flight for you Journey******");
+    }
+
     public static void main(String[] args) {
         bookingSystem = new FlightBookingSystem();
         Scanner sc = new Scanner(System.in);
@@ -43,7 +54,7 @@ public class FlightBookingApp {
                 // String combinedDate = date +"T"+time;
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                
+
                 LocalDate parsedLocalDate = LocalDate.parse(date, formatter);
 
                 LocalTime parsedLocalTime = LocalTime.parse(time);
@@ -53,25 +64,26 @@ public class FlightBookingApp {
                 bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival, combinedDateTime);
 
             } else if (choice == 2) {
+                sc.nextLine();
                 System.out.println("Enter From Location : ");
                 String from = sc.nextLine();
                 System.out.println("Enter To Location : ");
                 String to = sc.nextLine();
-                System.out.println("Enter Date : (yyyy mm dd)");
+                System.out.println("Enter Date : (yyyy-MM-dd)");
                 String date = sc.nextLine();
+                System.out.println("Enter Time (HH:MM):");
+                String time = sc.next();
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
-                        bookingSystem.getParsedDateTime(date));
+                        bookingSystem.getParsedDateTime(date, time));
                 System.out.println(availableFlights.size() + " Flights are available from " + from.toUpperCase()
                         + " to " + to.toUpperCase());
+                // If no Flights are available - continue
+                if (availableFlights.isEmpty()) {
+                    continue;
+                }
+                // If flights are available Printing Details
                 for (Flight flight : availableFlights) {
-                    System.out.println("---------------------------");
-                    System.out.println("Flight ID : " + flight.getFlightId());
-                    System.out.println("Airplane Model : " + flight.getAirplane().getModelName());
-                    System.out.println("From : " + flight.getDepartureLocation());
-                    System.out.println("To : " + flight.getArrivalLocation());
-                    System.out.println("Date : " + flight.getDate());
-                    System.out.println("Available Seats : " + flight.getAvailableSeats());
-                    System.out.println("*******Kindly Note the Flight Id to Book Flight for you Journey******");
+                    printFlightDetails(flight);
                 }
 
                 System.out.println("Enter Flight ID to book Flight Ticket : ");
@@ -100,24 +112,19 @@ public class FlightBookingApp {
                 String from = sc.nextLine();
                 System.out.println("Enter To Location : ");
                 String to = sc.nextLine();
-                System.out.println("Enter Date : (yyyy mm dd)");
+                System.out.println("Enter Date : (yyyy-MM-dd)");
                 String date = sc.nextLine();
                 System.out.println("Enter Time (HH:MM):");
                 String time = sc.next();
-                
+
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
-                        bookingSystem.getParsedDateTime(date,time));
+                        bookingSystem.getParsedDateTime(date, time));
+                        
                 System.out.println(availableFlights.size() + " Flights are available from " + from.toUpperCase()
                         + " to " + to.toUpperCase());
+
                 for (Flight flight : availableFlights) {
-                    System.out.println("---------------------------");
-                    System.out.println("Flight ID : " + flight.getFlightId());
-                    System.out.println("Airplane Model : " + flight.getAirplane().getModelName());
-                    System.out.println("From : " + flight.getDepartureLocation());
-                    System.out.println("To : " + flight.getArrivalLocation());
-                    System.out.println("Date : " + flight.getDate());
-                    System.out.println("Available Seats : " + flight.getAvailableSeats());
-                    System.out.println("*******Kindly Note the Flight Id to Book Flight for your Journey******");
+                    printFlightDetails(flight);
                 }
             } else if (choice == 5) {
                 System.exit(0);
