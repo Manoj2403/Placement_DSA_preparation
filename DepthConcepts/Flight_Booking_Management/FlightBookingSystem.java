@@ -117,7 +117,7 @@ public class FlightBookingSystem {
         LocalTime parsedLocalTime = LocalTime.parse(time);
 
         LocalDateTime combinedDateTime  = parsedLocalDate.atTime(parsedLocalTime);
-        
+
         return combinedDateTime;
     }
 
@@ -135,8 +135,8 @@ public class FlightBookingSystem {
         Flight flight = getFlighById(flightId);
         System.out.println(flight.getAirplane().getModelName() + " Seat Layouts");
         boolean[][] seats = flight.getAirplane().getSeats(); 
-        for(int col=0;col<=seats[0].length;col++){
-            for(int row=0;row<=seats.length;row++){
+        for(int col=0;col<seats[0].length;col++){
+            for(int row=0;row<seats.length;row++){
                 if(row==0 && col==0){
                     continue;
                 }

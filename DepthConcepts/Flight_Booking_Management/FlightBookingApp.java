@@ -4,29 +4,67 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class FlightBookingApp {
     static FlightBookingSystem bookingSystem;
+    private static final String regex = "^[a-zA-Z\\s]+$";
 
     public static void printFlightDetails(Flight flight) {
-        System.out.println("---------------------------");
-        System.out.println("Flight ID : " + flight.getFlightId());
-        System.out.println("Airplane Model : " + flight.getAirplane().getModelName());
-        System.out.println("From : " + flight.getDepartureLocation().toUpperCase());
-        System.out.println("To : " + flight.getArrivalLocation().toUpperCase());
-        System.out.println("Date : " + flight.getDate());
+        System.out.println("======================================================================");
+        System.out.println("Flight ID       : " + flight.getFlightId());
+        System.out.println("Airplane Model  : " + flight.getAirplane().getModelName());
+        System.out.println("From            : " + flight.getDepartureLocation().toUpperCase());
+        System.out.println("To              : " + flight.getArrivalLocation().toUpperCase());
+        System.out.println("Date            : " + flight.getDate());
         System.out.println("Available Seats : " + flight.getAvailableSeats());
         System.out.println("*******Kindly Note the Flight Id to Book Flight for you Journey******");
+        System.out.println("======================================================================");
+    }
+
+    public static boolean isValidString(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            return false;
+        }
+        return str.matches(regex);
+    }
+
+    public static boolean isValidDate(String date) {
+        if (date == null || date.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate.parse(date, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidTime(String time) {
+        if (time == null || time.trim().isEmpty())
+            return false;
+        try {
+            LocalTime.parse(time);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static boolean isBothSameLocation(String from, String to) {
+        return from.equalsIgnoreCase(to);
     }
 
     public static void main(String[] args) {
         bookingSystem = new FlightBookingSystem();
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("1) Add Flight\n 2) Book Flight\n 3) View Flights\n 4) Cancel Flight\n 5) Exit");
+            System.out.println("1) Add Flight\n2) Book Flight\n3) View Flights\n4) Cancel Flight\n5) Exit");
             int choice = sc.nextInt();
             if (choice == 1) {
                 System.out.println("Choose Airplane Model for Your Flight\n");
@@ -42,14 +80,42 @@ public class FlightBookingApp {
                 }
                 System.out.println("Enter Flight Id:");
                 int flightId = sc.nextInt();
-                System.out.println("Enter Departure Location:");
-                String departure = sc.next();
-                System.out.println("Enter Arrival Location:");
-                String arrival = sc.next();
-                System.out.println("Enter Date (YYYY-MM-DD):");
-                String date = sc.next();
-                System.out.println("Enter Time (HH:MM):");
-                String time = sc.next();
+                String departure = null;
+                String arrival = null;
+                String date = null;
+                String time = null;
+                while (true) {
+                    System.out.println("Enter Departure Location:");
+                    departure = sc.next();
+                    if (isValidString(departure)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Arrival Location:");
+                    arrival = sc.next();
+                    if (isValidString(arrival)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Date (YYYY-MM-DD):");
+                    date = sc.next();
+                    if (isValidDate(date)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Time (HH:MM):");
+                    time = sc.next();
+                    if (isValidTime(time)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
 
                 // String combinedDate = date +"T"+time;
 
@@ -62,17 +128,47 @@ public class FlightBookingApp {
                 LocalDateTime combinedDateTime = parsedLocalDate.atTime(parsedLocalTime);
 
                 bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival, combinedDateTime);
+                System.out.println("-------------------------------");
 
             } else if (choice == 2) {
                 sc.nextLine();
-                System.out.println("Enter From Location : ");
-                String from = sc.nextLine();
-                System.out.println("Enter To Location : ");
-                String to = sc.nextLine();
-                System.out.println("Enter Date : (yyyy-MM-dd)");
-                String date = sc.nextLine();
-                System.out.println("Enter Time (HH:MM):");
-                String time = sc.next();
+                String from = null;
+                String to = null;
+                String date = null;
+                String time = null;
+                while (true) {
+                    System.out.println("Enter Departure Location:");
+                    from = sc.next();
+                    if (isValidString(from)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Arrival Location:");
+                    to = sc.next();
+                    if (isValidString(to)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Date (YYYY-MM-DD):");
+                    date = sc.next();
+                    if (isValidDate(date)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Time (HH:MM):");
+                    time = sc.next();
+                    if (isValidTime(time)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
                         bookingSystem.getParsedDateTime(date, time));
                 System.out.println(availableFlights.size() + " Flights are available from " + from.toUpperCase()
@@ -89,9 +185,20 @@ public class FlightBookingApp {
                 System.out.println("Enter Flight ID to book Flight Ticket : ");
                 int flightId = sc.nextInt();
 
-                System.out.println("Enter Passenger Details : ");
-                System.out.println("Enter Name : ");
-                String name = sc.nextLine();
+                System.out.println("================================");
+                System.out.println("    Enter Passenger Details");
+                System.out.println("================================");
+
+                String name = null;
+                while (true) {
+                    sc.nextLine();
+                    System.out.println("Enter Name : ");
+                    name = sc.nextLine();
+                    if (isValidString(from)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
                 System.out.println("Enter Your Age : ");
                 int age = sc.nextInt();
                 System.out.println("Enter Mobile Number : ");
@@ -100,32 +207,65 @@ public class FlightBookingApp {
                 passenger.setName(name);
                 passenger.setAge(age);
                 passenger.setContactNo(phoneNo);
+                System.out.println("================================");
 
                 bookingSystem.showSeatLayout(flightId);
+                sc.nextLine();
                 System.out.println("Enter Seat No : ");
                 String seatNo = sc.nextLine();
                 System.out.println("Enter Seat Model : (Economic/Model/First)");
                 String seatModel = sc.nextLine();
                 bookingSystem.bookFlight(flightId, passenger, seatNo, seatModel);
+                System.out.println("--------------------------------");
             } else if (choice == 3) {
-                System.out.println("Enter From Location : ");
-                String from = sc.nextLine();
-                System.out.println("Enter To Location : ");
-                String to = sc.nextLine();
-                System.out.println("Enter Date : (yyyy-MM-dd)");
-                String date = sc.nextLine();
-                System.out.println("Enter Time (HH:MM):");
-                String time = sc.next();
+                String from = null;
+                String to = null;
+                String date = null;
+                String time = null;
+                while (true) {
+                    System.out.println("Enter Departure Location:");
+                    from = sc.next();
+                    if (isValidString(from)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Arrival Location:");
+                    to = sc.next();
+                    if (isValidString(to)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Date (YYYY-MM-DD):");
+                    date = sc.next();
+                    if (isValidDate(date)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
+                while (true) {
+                    System.out.println("Enter Time (HH:MM):");
+                    time = sc.next();
+                    if (isValidTime(time)) {
+                        break;
+                    }
+                    System.out.println("***Kindly Enter Correct String format***");
+                }
 
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
                         bookingSystem.getParsedDateTime(date, time));
-                        
+
                 System.out.println(availableFlights.size() + " Flights are available from " + from.toUpperCase()
                         + " to " + to.toUpperCase());
 
                 for (Flight flight : availableFlights) {
                     printFlightDetails(flight);
                 }
+
+                System.out.println("--------------------------------");
             } else if (choice == 5) {
                 System.exit(0);
             }

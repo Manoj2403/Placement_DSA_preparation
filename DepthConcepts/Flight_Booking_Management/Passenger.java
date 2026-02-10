@@ -1,14 +1,15 @@
 // package Flight_Booking_Management;
 
 public class Passenger {
-    private static int passengerId;
+    private static int counter;
+    private int passengerId;
     private String name;
     private int age;
     private long contactNo;
     private Flight bookedFlight;
 
     Passenger(){
-        passengerId++;
+        passengerId = ++counter;
     }
 
     public void setName(String name) {
