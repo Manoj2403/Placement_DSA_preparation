@@ -215,7 +215,13 @@ public class FlightBookingApp {
                 String seatNo = sc.nextLine();
                 System.out.println("Enter Seat Model : (Economic/Model/First)");
                 String seatModel = sc.nextLine();
-                bookingSystem.bookFlight(flightId, passenger, seatNo, seatModel);
+                Ticket bookedTicket = bookingSystem.bookFlight(flightId, passenger, seatNo, seatModel);
+                if (bookedTicket != null) {
+                    System.out.println("Flight Booked Successfully");
+                    System.out.println(bookedTicket);
+                } else {
+                    System.out.println("Flight Not Booked Successfully..");
+                }
                 System.out.println("--------------------------------");
             } else if (choice == 3) {
                 String from = null;
@@ -263,9 +269,53 @@ public class FlightBookingApp {
 
                 for (Flight flight : availableFlights) {
                     printFlightDetails(flight);
+                    bookingSystem.showSeatLayout(flight.getFlightId());
                 }
 
                 System.out.println("--------------------------------");
+            } else if (choice == 4) {
+                System.out.println("********Cancelling Flights********");
+                System.out.println("Enter Ticket Id to Cancel Flight :  ");
+                int ticketId = sc.nextInt();
+                sc.nextLine();
+                Ticket bookedTicket = bookingSystem.getTicket(ticketId);
+                if (bookedTicket == null) {
+                    System.out.println("Ticket was Not Found..");
+                    continue;
+                }
+                if (bookedTicket.getStatus() == Status.NOT_ACTIVE) {
+                    System.out.println("Ticket is Not Active..");
+                    continue;
+                }
+                Flight flight = bookedTicket.getFlight();
+                Passenger passenger = bookedTicket.getPassenger();
+                System.out.println("===================================");
+                System.out.println("--- Ticket Details ---");
+                System.out.println("===================================");
+                System.out.println("Flight: " + flight.getFlightId());
+                System.out.println("From: " + flight.getDepartureLocation());
+                System.out.println("To: " + flight.getArrivalLocation());
+                System.out.println("Seat: " + bookedTicket.getSeatNo());
+                System.out.println("*************************************");
+                System.out.println("--- Passenger Details ---");
+                System.out.println("Passenger: " + passenger.getName());
+                System.out.println("Passenger ID: " + passenger.getPassengerId());
+                System.out.println("===================================");
+
+                System.out.println("Confirm Cancellation? (YES/NO)");
+                String cancelChoice = sc.nextLine();
+                if(cancelChoice.equalsIgnoreCase("no")){
+                    System.out.println("Cancel Aborted....");
+                    continue;
+                }
+
+                Result result = bookingSystem.cancelFlight(bookedTicket);
+                if (!(result.isSuccess())) {
+                    System.out.println(result.getMessage());
+                    continue;
+                }
+                System.out.println("Ticket cancelled SUccessfully..");
+
             } else if (choice == 5) {
                 System.exit(0);
             }

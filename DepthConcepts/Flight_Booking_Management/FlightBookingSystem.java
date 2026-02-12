@@ -22,7 +22,8 @@ public class FlightBookingSystem {
                 return;
             }
         }
-        Flight flight = new Flight(flightId, airplane, departureLocation.toLowerCase(), arrivalLocation.toLowerCase(), date, new ArrayList<>());
+        Flight flight = new Flight(flightId, airplane, departureLocation.toLowerCase(), arrivalLocation.toLowerCase(),
+                date, new ArrayList<>());
         flights.add(flight);
         System.out.println("Flight Added Successfully....");
     }
@@ -39,6 +40,10 @@ public class FlightBookingSystem {
         }
 
         int seatRow = getSeatNo(seatNo);
+        if (seatRow <= 0) {
+            System.out.println("Enter Valid Seat Number..");
+            return null;
+        }
         model = model.toLowerCase();
         if (model.equals("economic")) {
             if (!flight.getAirplane().isEconomicClass(seatRow))
@@ -51,20 +56,44 @@ public class FlightBookingSystem {
                 return null;
         }
         int seatCol = getSeatCol(seatNo);
-        if (!checkFlightSeatAvail(flight, seatRow, seatCol)) {
+        if (!checkFlightSeatAvail(flight, seatRow - 1, seatCol)) {
             System.out.println(seatNo + " Seat is Already Reserved");
             return null;
         }
 
         boolean[][] seat = flight.getAirplane().getSeats();
-        seat[seatRow][seatCol]=true;
+        seat[seatRow - 1][seatCol] = true;
         flight.getPassengerList().add(passenger);
         passenger.setBookedFlight(flight);
-        Ticket ticket = new Ticket(passenger,flight,LocalDateTime.now(),"Sucess");
+        Ticket ticket = new Ticket(passenger, flight, LocalDateTime.now(), seatNo,Status.ACTIVE);
         tickets.add(ticket);
-        System.out.println("Flight Booked Successfully");
         return ticket;
+    }
 
+    public Ticket getTicket(int ticketId){
+        for(Ticket ticket : tickets){
+            if(ticketId==ticket.getTicketNo()){
+                return ticket;
+            }
+        }
+        return null;
+    }
+    public Result cancelFlight(Ticket ticket) {
+        if(ticket==null){
+            return new Result(false,"Ticket was Not Found.");
+        }
+        if(ticket.getStatus()==Status.NOT_ACTIVE){
+            return new Result(false, "Ticket was Not Active.");
+        }
+        Flight bookedFlight = ticket.getFlight();
+        boolean[][] seats = bookedFlight.getAirplane().getSeats();
+
+        int seatRow = getSeatNo(ticket.getSeatNo()); //1,2,3,4.....
+        int seatCol = getSeatCol(ticket.getSeatNo()); //A,B,C,D
+
+        seats[seatRow-1][seatCol] = false;
+        ticket.setStatus(Status.NOT_ACTIVE);
+        return new Result(true,"Success");
     }
 
     public boolean checkFlightSeatAvail(Flight flight, int seatRow, int seatCol) {
@@ -87,7 +116,7 @@ public class FlightBookingSystem {
             boolean flag = true;
             char currChar = seat.charAt(i);
             if (Character.isDigit(currChar)) {
-                seatNo = seatNo * 10 + currChar - '0';
+                seatNo = seatNo * 10 + (currChar - '0');
                 flag = false;
             } else if (flag) {
                 break;
@@ -109,14 +138,14 @@ public class FlightBookingSystem {
         return null;
     }
 
-    public LocalDateTime getParsedDateTime(String date,String time) {
+    public LocalDateTime getParsedDateTime(String date, String time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                
+
         LocalDate parsedLocalDate = LocalDate.parse(date, formatter);
 
         LocalTime parsedLocalTime = LocalTime.parse(time);
 
-        LocalDateTime combinedDateTime  = parsedLocalDate.atTime(parsedLocalTime);
+        LocalDateTime combinedDateTime = parsedLocalDate.atTime(parsedLocalTime);
 
         return combinedDateTime;
     }
@@ -125,32 +154,49 @@ public class FlightBookingSystem {
         return flights.stream()
                 .filter(flight -> flight.getDepartureLocation().equals(from.toLowerCase())
                         && flight.getArrivalLocation().equals(to.toLowerCase()))
-                // .peek(flight -> System.out.println("Matching route: " + flight.getDate() + 
-                //     " isAfter? " + flight.getDate().isAfter(dateTime)))
+                // .peek(flight -> System.out.println("Matching route: " + flight.getDate() +
+                // " isAfter? " + flight.getDate().isAfter(dateTime)))
                 .filter(flight -> !flight.getDate().isBefore(dateTime))
                 .collect(Collectors.toList());
     }
 
-    public void showSeatLayout(int flightId){
+    public void showSeatLayout(int flightId) {
         Flight flight = getFlighById(flightId);
         System.out.println(flight.getAirplane().getModelName() + " Seat Layouts");
-        boolean[][] seats = flight.getAirplane().getSeats(); 
-        for(int col=0;col<seats[0].length;col++){
-            for(int row=0;row<seats.length;row++){
-                if(row==0 && col==0){
-                    continue;
-                }
-                if(col==0 && row!=0){
-                    System.out.println(row+"  ");
-                }
-                if(row==0 && col!=0){
-                    System.out.print((col-1)+'A');
-                    System.out.println("  ");
-                }
-                else {
-                    System.out.println(seats[col-1][row-1]+"  ");
-                }
+        boolean[][] seats = flight.getAirplane().getSeats();
+        int economicStart = 1;
+        int economicEnd = 8;
+        int businessStart = 9;
+        int businessEnd = 16;
+        int firstStart = 17;
+        int firstEnd = 24;
+        // To find economic,business,first
+        Airplane airplane = flight.getAirplane();
+        for (int i = 0; i < seats.length; i++) {
+            int seatNo = (i + 1);
+            if (airplane.isEconomicClass(seatNo)) {
+                economicEnd = seatNo;
+                businessStart = economicEnd + 1;
+            } else if (airplane.isBusinessClass(seatNo)) {
+                businessEnd = seatNo;
+                firstStart = businessEnd + 1;
+            } else {
+                firstEnd = seatNo;
             }
+        }
+        System.out.println("Economic (" + economicStart + "-" + economicEnd + ")");
+        System.out.println("Business (" + businessStart + "-" + businessEnd + ")");
+        System.out.println("First (" + firstStart + "-" + firstEnd + ")");
+        for (int i = 0; i < seats.length; i++) {
+            System.out.print("   " + (i + 1));
+        }
+        System.out.println();
+        for (int col = 0; col < seats[0].length; col++) {
+            System.out.print((char) (col + 'A') + "  ");
+            for (int row = 0; row < seats.length; row++) {
+                System.out.print(seats[row][col] ? "X" : " " + "   ");
+            }
+            System.out.println();
         }
     }
 }

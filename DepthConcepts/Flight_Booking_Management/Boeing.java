@@ -50,7 +50,7 @@ public class Boeing implements Airplane {
     @Override
     public boolean isFirstClass(int seatNoRow) {
         boolean isFirst = false;
-        isFirst = seatNoRow >= 17 && seatNoRow <= 24;
+        isFirst = seatNoRow >= 17 && seatNoRow <= 26;
         return isFirst;
     }
 
