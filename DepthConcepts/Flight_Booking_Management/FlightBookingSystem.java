@@ -14,36 +14,33 @@ public class FlightBookingSystem {
         tickets = new ArrayList<>();
     }
 
-    public void addFlight(int flightId, Airplane airplane, String departureLocation, String arrivalLocation,
+    public Result addFlight(int flightId, Airplane airplane, String departureLocation, String arrivalLocation,
             LocalDateTime date) {
         for (Flight flight : flights) {
             if (flight.getFlightId() == flightId) {
-                System.out.println("Flight Already Exists..");
-                return;
+                return new Result(false, "Flight Already Exists..");
             }
         }
         Flight flight = new Flight(flightId, airplane, departureLocation.toLowerCase(), arrivalLocation.toLowerCase(),
                 date, new ArrayList<>());
         flights.add(flight);
-        System.out.println("Flight Added Successfully....");
+        return new Result(true, null);
     }
 
-    public Ticket bookFlight(int flightId, Passenger passenger, String seatNo, String model) {
-        Flight flight = getFlighById(flightId);
+    public Result bookFlight(int flightId, Passenger passenger, String seatNo, String model) {
+        Flight flight = getFlightById(flightId);
         if (flight == null) {
-            System.out.println("Flight Not Exists..");
-            return null;
+            return new Result(false, "Flight Not Exists..");
         }
         if (checkDuplicatePassenger(flight, passenger.getPassengerId())) {
-            System.out.println("Passenger Already Booked the Flight " + flightId);
-            return null;
+            return new Result(false, "Passenger Already Booked the Flight " + flightId);
         }
 
         int seatRow = getSeatNo(seatNo);
         if (seatRow <= 0) {
-            System.out.println("Enter Valid Seat Number..");
-            return null;
+            return new Result(false, "Seat Number is Not Valid..");
         }
+
         model = model.toLowerCase();
         if (model.equals("economic")) {
             if (!flight.getAirplane().isEconomicClass(seatRow))
@@ -57,43 +54,43 @@ public class FlightBookingSystem {
         }
         int seatCol = getSeatCol(seatNo);
         if (!checkFlightSeatAvail(flight, seatRow - 1, seatCol)) {
-            System.out.println(seatNo + " Seat is Already Reserved");
-            return null;
+            return new Result(false, seatNo + " Seat is Already Reserved");
         }
 
         boolean[][] seat = flight.getAirplane().getSeats();
         seat[seatRow - 1][seatCol] = true;
         flight.getPassengerList().add(passenger);
         passenger.setBookedFlight(flight);
-        Ticket ticket = new Ticket(passenger, flight, LocalDateTime.now(), seatNo,Status.ACTIVE);
+        Ticket ticket = new Ticket(passenger, flight, LocalDateTime.now(), seatNo, Status.ACTIVE);
         tickets.add(ticket);
-        return ticket;
+        return new Result(true, null, ticket);
     }
 
-    public Ticket getTicket(int ticketId){
-        for(Ticket ticket : tickets){
-            if(ticketId==ticket.getTicketNo()){
+    public Ticket getTicket(int ticketId) {
+        for (Ticket ticket : tickets) {
+            if (ticketId == ticket.getTicketNo()) {
                 return ticket;
             }
         }
         return null;
     }
+
     public Result cancelFlight(Ticket ticket) {
-        if(ticket==null){
-            return new Result(false,"Ticket was Not Found.");
+        if (ticket == null) {
+            return new Result(false, "Ticket was Not Found.");
         }
-        if(ticket.getStatus()==Status.NOT_ACTIVE){
+        if (ticket.getStatus() == Status.NOT_ACTIVE) {
             return new Result(false, "Ticket was Not Active.");
         }
         Flight bookedFlight = ticket.getFlight();
         boolean[][] seats = bookedFlight.getAirplane().getSeats();
 
-        int seatRow = getSeatNo(ticket.getSeatNo()); //1,2,3,4.....
-        int seatCol = getSeatCol(ticket.getSeatNo()); //A,B,C,D
+        int seatRow = getSeatNo(ticket.getSeatNo()); // 1,2,3,4.....
+        int seatCol = getSeatCol(ticket.getSeatNo()); // A,B,C,D
 
-        seats[seatRow-1][seatCol] = false;
+        seats[seatRow - 1][seatCol] = false;
         ticket.setStatus(Status.NOT_ACTIVE);
-        return new Result(true,"Success");
+        return new Result(true, "Success");
     }
 
     public boolean checkFlightSeatAvail(Flight flight, int seatRow, int seatCol) {
@@ -130,12 +127,20 @@ public class FlightBookingSystem {
                 .anyMatch(passenger -> passenger.getPassengerId() == passengerId);
     }
 
-    public Flight getFlighById(int flightId) {
+    public Flight getFlightById(int flightId) {
         for (Flight flight : flights) {
             if (flight.getFlightId() == flightId)
                 return flight;
         }
         return null;
+    }
+
+    public boolean isFlightExists(int flightId) {
+        for (Flight flight : flights) {
+            if (flight.getFlightId() == flightId)
+                return true;
+        }
+        return false;
     }
 
     public LocalDateTime getParsedDateTime(String date, String time) {
@@ -161,7 +166,7 @@ public class FlightBookingSystem {
     }
 
     public void showSeatLayout(int flightId) {
-        Flight flight = getFlighById(flightId);
+        Flight flight = getFlightById(flightId);
         System.out.println(flight.getAirplane().getModelName() + " Seat Layouts");
         boolean[][] seats = flight.getAirplane().getSeats();
         int economicStart = 1;

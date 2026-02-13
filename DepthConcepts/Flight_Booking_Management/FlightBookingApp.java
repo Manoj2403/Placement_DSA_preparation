@@ -106,7 +106,7 @@ public class FlightBookingApp {
                     if (isValidDate(date)) {
                         break;
                     }
-                    System.out.println("***Kindly Enter Correct String format***");
+                    System.out.println("***Kindly Enter Correct Date format***");
                 }
                 while (true) {
                     System.out.println("Enter Time (HH:MM):");
@@ -114,7 +114,7 @@ public class FlightBookingApp {
                     if (isValidTime(time)) {
                         break;
                     }
-                    System.out.println("***Kindly Enter Correct String format***");
+                    System.out.println("***Kindly Enter Correct Time format***");
                 }
 
                 // String combinedDate = date +"T"+time;
@@ -127,8 +127,14 @@ public class FlightBookingApp {
 
                 LocalDateTime combinedDateTime = parsedLocalDate.atTime(parsedLocalTime);
 
-                bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival, combinedDateTime);
-                System.out.println("-------------------------------");
+                Result result = bookingSystem.addFlight(flightId, selectedAirplane, departure, arrival,
+                        combinedDateTime);
+                if (!(result.isSuccess())) {
+                    System.out.println(result.getMessage());
+                } else {
+                    System.out.println("Flight Added Successfully..");
+                }
+                System.out.println("------------------------------------");
 
             } else if (choice == 2) {
                 sc.nextLine();
@@ -158,7 +164,7 @@ public class FlightBookingApp {
                     if (isValidDate(date)) {
                         break;
                     }
-                    System.out.println("***Kindly Enter Correct String format***");
+                    System.out.println("***Kindly Enter Correct Date format***");
                 }
                 while (true) {
                     System.out.println("Enter Time (HH:MM):");
@@ -184,7 +190,18 @@ public class FlightBookingApp {
 
                 System.out.println("Enter Flight ID to book Flight Ticket : ");
                 int flightId = sc.nextInt();
+                while (!(bookingSystem.isFlightExists(flightId))) {
+                    System.out.println("Flight Id Does Not Exists..");
+                    System.out.println("Enter Correct Id :  ");
+                    flightId = sc.nextInt();
+                }
 
+                //Check Flight and Their planned Travel are correct 
+                Flight flight = bookingSystem.getFlightById(flightId);
+                if(flight!=null && !(flight.getDepartureLocation().equalsIgnoreCase(from) && flight.getArrivalLocation().equalsIgnoreCase(to))){
+                    System.out.println("Your Planned Travel and Flight Id Does not Match..");
+                    continue;
+                }
                 System.out.println("================================");
                 System.out.println("    Enter Passenger Details");
                 System.out.println("================================");
@@ -215,7 +232,12 @@ public class FlightBookingApp {
                 String seatNo = sc.nextLine();
                 System.out.println("Enter Seat Model : (Economic/Model/First)");
                 String seatModel = sc.nextLine();
-                Ticket bookedTicket = bookingSystem.bookFlight(flightId, passenger, seatNo, seatModel);
+                Result result = bookingSystem.bookFlight(flightId, passenger, seatNo, seatModel);
+                if (!(result.isSuccess())) {
+                    System.out.println(result.getMessage());
+                    continue;
+                }
+                Ticket bookedTicket = (Ticket) result.getData();
                 if (bookedTicket != null) {
                     System.out.println("Flight Booked Successfully");
                     System.out.println(bookedTicket);
@@ -250,7 +272,7 @@ public class FlightBookingApp {
                     if (isValidDate(date)) {
                         break;
                     }
-                    System.out.println("***Kindly Enter Correct String format***");
+                    System.out.println("***Kindly Enter Correct Date format***");
                 }
                 while (true) {
                     System.out.println("Enter Time (HH:MM):");
@@ -258,7 +280,7 @@ public class FlightBookingApp {
                     if (isValidTime(time)) {
                         break;
                     }
-                    System.out.println("***Kindly Enter Correct String format***");
+                    System.out.println("***Kindly Enter Correct Time format***");
                 }
 
                 List<Flight> availableFlights = bookingSystem.getAvailableFlights(from, to,
@@ -304,8 +326,8 @@ public class FlightBookingApp {
 
                 System.out.println("Confirm Cancellation? (YES/NO)");
                 String cancelChoice = sc.nextLine();
-                if(cancelChoice.equalsIgnoreCase("no")){
-                    System.out.println("Cancel Aborted....");
+                if (cancelChoice.equalsIgnoreCase("no")) {
+                    System.out.println("Cancellation Aborted....");
                     continue;
                 }
 
