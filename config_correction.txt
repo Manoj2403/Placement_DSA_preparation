@@ -3,7 +3,7 @@
       java -version(Both should be same)
 
 (cmd) where java
-        (It Should Prnit like below dated Aug 17th 2025)
+        (It Should Print like below dated Aug 17th 2025)
         C:\Program Files\Java\jdk-21\bin\java.exe
         C:\Program Files\Java\jdk-19\bin\java.exe
 ------------if it not like this ---------------

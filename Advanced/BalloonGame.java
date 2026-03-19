@@ -121,8 +121,8 @@ public class BalloonGame {
         Arrays.fill(height, n);
 
         System.out.println("*********** Balloon Game *********** ");
-
-        while (true) {
+        try{
+            while (true) {
 
             System.out.println("Enter the Column number to fill balloon ("+0+" - "+(n-1)+"):");
             int col = sc.nextInt();
@@ -176,5 +176,11 @@ public class BalloonGame {
 
             printMatrix(mat);
         }
+        }
+        catch(Exception e){
+            throw new InputMismatchException("Input is Mismatched here");
+        }
+
+        
     }
 }
