@@ -81,7 +81,7 @@ public class NumberToString {
             }
             String numberString = convertNumberToString(n);
             System.out.println(numberString);
-            System.out.println("=====================================================");
+            System.out.println("===========================================================");
         }
         sc.close();
     }
