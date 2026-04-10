@@ -16,19 +16,18 @@ public class RomToInt_13 {
         int sum = 0;
         for (int i = ch.length - 1; i >= 0; i--) {
             if (map.get(ch[i]) >= prevVal) {
-                prevVal = map.get(ch[i]);
                 sum += map.get(ch[i]);
-            } else
-            {
-                prevVal = map.get(ch[i]);
+            } 
+            else {
                 sum -= map.get(ch[i]);
             }
+            prevVal = map.get(ch[i]);
         }
         return sum;
     }
 
     public static void main(String[] args) {
-        String s = "MCMXCIV";
+        String s = "DCCC";
         RomToInt_13 r = new RomToInt_13();
         int result = r.romanToInt(s);
         System.out.println(result);
