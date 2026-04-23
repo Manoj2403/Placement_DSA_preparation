@@ -1,9 +1,14 @@
 public class Node {
-    Node[] links = new Node[26];
-    boolean flag = false;
+    Node[] links;
+    boolean flag;
+    private int wordCtr;
+    private int prefixCtr;
 
     Node() {
-
+        links = new Node[26];
+        flag = false;
+        wordCtr = 0;
+        prefixCtr = 0;
     }
 
     boolean containsKey(char c) {
@@ -28,4 +33,27 @@ public class Node {
         return flag;
     }
 
+    int getWordCtr() {
+        return this.wordCtr;
+    }
+
+    int getPrefixCtr() {
+        return this.prefixCtr;
+    }
+
+    void increaseWordCnt() {
+        wordCtr++;
+    }
+
+    void increasePrefixCnt() {
+        prefixCtr++;
+    }
+
+    void decreaseWordCnt() {
+        wordCtr--;
+    }
+
+    void decreasePrefixCnt() {
+        prefixCtr--;
+    }
 }
